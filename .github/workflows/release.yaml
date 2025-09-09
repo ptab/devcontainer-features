@@ -1,10 +1,23 @@
-name: "Release dev container features & Generate Documentation"
+name: "Publish features"
 on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+
+  validate:
     if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Validate devcontainer-feature.json files"
+        uses: devcontainers/action@v1
+        with:
+          validate-only: "true"
+          base-path-to-features: "./src"
+
+  deploy:
+    needs: validate
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -19,16 +32,15 @@ jobs:
           publish-features: "true"
           base-path-to-features: "./src"
           generate-docs: "true"
-          
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+          
       - name: Create PR for Documentation
         id: push_image_info
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -e
+        run: |-
+          set -eu
           echo "Start."
           # Configure git and Push updates
           git config --global user.email github-actions[bot]@users.noreply.github.com
