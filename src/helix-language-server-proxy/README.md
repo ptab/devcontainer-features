@@ -16,6 +16,9 @@ Installs a proxy to support running containerized language servers in Helix.
    command = "devcontainer"
    args = [ "exec", "--workspace-folder", ".", "helix-language-server-proxy", "bash-language-server", "start" ]
    ```
+   Make sure you prefix the language server command with `helix-language-server-proxy` - that's the magic sauce!
+3. Start your devcontainer as usual.
+4. Run Helix and enjoy the LSP suggestions.
 
 ## Why is this needed?
 
@@ -34,6 +37,7 @@ I looked around for inspiration, and eventually found in the [README](https://gi
 > This is required for several LSPs, and they will exit immediately if this is not specified.
 
 This explains the issue I was seeing!
+
 To address this, the first thing I tried was to start my devcontainer with `--pid=host`, but that did not seen to make any difference as the language server still stopped after a few seconds.
 
 My next step was to configure Helix to stop it from sending the `processId` parameter. Unfortunately [this behaviour is non-configurable at the moment](https://github.com/helix-editor/helix/blob/d0218f7e78bc0c3af4b0995ab8bda66b9c542cf3/helix-lsp/src/client.rs#L560), and so this was also not an option.
@@ -45,5 +49,6 @@ This repository makes this hacky solution a bit easier to manage by wrapping it 
 
 ## FAQ
 
-_Can I also use this for my formatters?_
+#### _Can I also use this for my formatters?_
+
 You _can_, but Helix won't make it easy. Check out [ptab/helix-language-servers](https://github.com/ptab/helix-language-servers) for a working solution.
