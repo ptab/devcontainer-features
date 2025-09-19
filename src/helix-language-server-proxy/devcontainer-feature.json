@@ -1,0 +1,10 @@
+{
+    "name": "helix-language-server-proxy",
+    "id": "helix-language-server-proxy",
+    "version": "0.0.1",
+    "description": "Installs a proxy to support running containerized language servers in Helix",
+    "options": {},
+    "dependsOn": {
+        "ghcr.io/devcontainers/features/python": {},
+    },
+}
